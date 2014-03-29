@@ -24,13 +24,13 @@ def Main():
     DATA = []
 
     #create welcome window
-    TITLE = "Beckman Research Application"
-    eg.msgbox("Welcome to the Beckman Research Application!", TITLE)
+    ###TITLE = "Beckman Research Application"
+    ###eg.msgbox("Welcome to the Beckman Research Application!", TITLE)
 
     #create window for text file
-    msg = 'What is the name of the Text file \n' + 'Make sure it is contained within the documents folder and has been converted from PDF to text.'
-    documentName = eg.enterbox(msg='What is the name of the Text file', title=' ', default='testShort', strip=True, image=None, root=None)
-
+    ###msg = 'What is the name of the Text file \n' + 'Make sure it is contained within the documents folder and has been converted from PDF to text.'
+    ###documentName = eg.enterbox(msg='What is the name of the Text file', title=' ', default='testShort', strip=True, image=None, root=None)
+    documentName = 'testShort.txt'
     #####TODO: CHANGE THIS BACK WHEN BUILDING
     #datafile = os.path.abspath('../../../'+documentName+'.txt')
     datafile = os.path.abspath('test/'+documentName+'.txt')
@@ -40,7 +40,8 @@ def Main():
     #Show Section Titles To User
     SECTIONS = AddSectionToCollection(GetSectionTitleIndicies())
     choices = ShowSectionTitlesToBeSelected()
-    choice = eg.choicebox(msg, TITLE, choices)
+    ###choice = eg.choicebox(msg, TITLE, choices)
+    print(choices)
 
 #########################################################################
 ##COLLECTION##
@@ -86,18 +87,15 @@ from collections import namedtuple
 Section = namedtuple('Section', 'title text')
 
 def SectionStr(Section):
-    '''Return the section to string
-    '''
+    '''Return the section to string'''
     return ("Section Title:" + Section.title + "\n" + "Section Text: " + Section.text + "\n\n")
 
 def SectionStrHeaders(Section):
-    '''Return the section title to string
-    '''
+    '''Return the section title to string'''
     return ("Section Title:" + Section.title + "\n")
 
 def IsLineUppercase(line):
-    '''finds out if we are dealing with section title
-    '''
+    '''finds out if we are dealing with section title'''
     line.strip('/n')
     return(line.istitle())
 
@@ -187,3 +185,7 @@ def ShowSectionTitlesToBeSelected():
         if title != '':
             headers_clean.append(title)
     return headers_clean
+
+
+#RUN PROGRAM
+Main()
