@@ -12,6 +12,8 @@
 ##	in scope vars: all lowercase seperated by underscore
 __author__ = 'danieldiaz'
 
+##TODO: hey u may have figured a way to do page numbers, tell jenny
+
 import os
 import easygui as eg
 
@@ -19,10 +21,9 @@ def Main():
     '''Main Function that will run the whole program
     '''
     ## init new section and speaker collection
-    SECTIONS = CollectionNew()
-    SPEAKERS = CollectionNew()
-    DATA = []
-
+    global SECTIONS
+    global SPEAKERS
+    global DATA
     #create welcome window
     ###TITLE = "Beckman Research Application"
     ###eg.msgbox("Welcome to the Beckman Research Application!", TITLE)
@@ -30,7 +31,8 @@ def Main():
     #create window for text file
     ###msg = 'What is the name of the Text file \n' + 'Make sure it is contained within the documents folder and has been converted from PDF to text.'
     ###documentName = eg.enterbox(msg='What is the name of the Text file', title=' ', default='testShort', strip=True, image=None, root=None)
-    documentName = 'testShort'
+    documentName = 'HR'
+
     #####TODO: CHANGE THIS BACK WHEN BUILDING
     #datafile = os.path.abspath('../../../'+documentName+'.txt')
     datafile = os.path.abspath('test/'+documentName+'.txt')
@@ -41,7 +43,8 @@ def Main():
     SECTIONS = AddSectionToCollection(GetSectionTitleIndicies())
     choices = ShowSectionTitlesToBeSelected()
     ###choice = eg.choicebox(msg, TITLE, choices)
-    print(choices)
+    #print(choices)
+    print(CollectionToPyDisplayString(choices))
 
 #########################################################################
 ##COLLECTION##
@@ -76,6 +79,13 @@ def CollectionToStrHeaders(Collection):
         result = result + SectionStrHeaders(x)
     return result
 
+def CollectionToPyDisplayString(Collection):
+    '''returns the collection with each elem with a newline'''
+    result = ''
+    for x in Collection:
+        result = result + x + '\n'
+    return result
+
 #########################################################################
 ##SECTION##
 #########################################################################
@@ -97,7 +107,17 @@ def SectionStrHeaders(Section):
 def IsLineUppercase(line):
     '''finds out if we are dealing with section title'''
     line.strip('/n')
-    return(line.istitle())
+    #special case for page numbers, they need to be ignored
+    if line.startswith('---'):
+        return False
+    #if entire line is numbers dont include it
+    if line.isdigit():
+        return False
+    for x in line:
+        if x.isalnum():
+            if x.islower():
+                return False
+    return True
 
 def GetSectionText(IndexStart,IndexEnd):
     '''gets text using section header indexes'''
@@ -117,7 +137,7 @@ def GetSectionTitleIndicies():
     and return it parsed up into Sections'''
     '''TODO:do check if index is from header to EOF'''
     global DATA
-    print("This function has", DATA)
+    #print("This function has", DATA)
     indiciesofheaders = []
     iterator = 0
     for line in DATA:
@@ -161,8 +181,8 @@ def GetFileName():
 
 def ReadFile(Filename):
     ''' Read file, returns list! of lines'''
-    #possibly do errors replace on this line???
-    infile = open(Filename, 'r', encoding='utf-8', errors='ignore')
+    #TODO:possibly do errors replace on this line???
+    infile = open(Filename, 'r',encoding='utf-16',errors='ignore')
     data = infile.readlines()
     infile.close()
     return data
@@ -188,4 +208,7 @@ def ShowSectionTitlesToBeSelected():
 
 
 #RUN PROGRAM
+SECTIONS = CollectionNew()
+SPEAKERS = CollectionNew()
+DATA = []
 Main()
