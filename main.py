@@ -30,7 +30,7 @@ def Main():
     #create window for text file
     ###msg = 'What is the name of the Text file \n' + 'Make sure it is contained within the documents folder and has been converted from PDF to text.'
     ###documentName = eg.enterbox(msg='What is the name of the Text file', title=' ', default='testShort', strip=True, image=None, root=None)
-    documentName = 'testShort.txt'
+    documentName = 'testShort'
     #####TODO: CHANGE THIS BACK WHEN BUILDING
     #datafile = os.path.abspath('../../../'+documentName+'.txt')
     datafile = os.path.abspath('test/'+documentName+'.txt')
@@ -160,9 +160,9 @@ def GetFileName():
     return filename
 
 def ReadFile(Filename):
-    ''' Read file, returns list! of lines
-    '''
-    infile = open(Filename, 'r',)
+    ''' Read file, returns list! of lines'''
+    #possibly do errors replace on this line???
+    infile = open(Filename, 'r', encoding='utf-8', errors='ignore')
     data = infile.readlines()
     infile.close()
     return data
