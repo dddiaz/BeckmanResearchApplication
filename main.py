@@ -719,25 +719,21 @@ def SectionSelectedGUI(SectionChoice):
     AnalysisOption = ""
     while AnalysisOption != "Exit":
         #TODO;Change back in production
-        #AnalysisOption = DisplaySectionAnalysisOptions()
-        #AnalysisOption = 'Speaker Word Count'
-        AnalysisOption = 'Look for manually entered Keyword'
-        print((AnalysisOption, section, RegexSpeakerList))
+        AnalysisOption = DisplaySectionAnalysisOptions()
         DisplayText = SectionFunctionality(AnalysisOption, section, RegexSpeakerList)
-        print(DisplayText)
         break
         title = "Beckman Research Application"
-        #todo: add mesage box back in to production
-        #eg.msgbox(DisplayText, title)
+        eg.msgbox(DisplayText, title)
     return 0
 
 #RUN PROGRAM
+TESTING = False
 TITLE = "Beckman Research Application"
 SECTIONS = CollectionNew()
 SPEAKERS = CollectionNew()
 DATA = []
-TESTING = True
 
-#run()
-
-nonguirun()
+if TESTING:
+    nonguirun()
+else:
+    run()
