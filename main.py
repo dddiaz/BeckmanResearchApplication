@@ -33,28 +33,17 @@ def run():
                                , strip=True
                                , image=None
                                , root=None)
-    #documentName = 'TestHRAdobeExport'
 
-    #####TODO: CHANGE THIS BACK WHEN BUILDING
     datafile = os.path.abspath('../../../' + documentName + '.txt')
-    #datafile = os.path.abspath('test/' + documentName + '.txt')
-    ##TODO:THIS IS ONLY FOR TESTING!!!!
-    #datafile = 'users/danieldiaz/Dev/school/Beckman/BeckmanPyCharm/dist/TestThis.txt'
 
     DATA = ReadFile(datafile)
 
     #Show Section Titles To User
     SECTIONS = AddSectionToCollection(GetSectionTitleIndicies())
     SECTIONS = CleanSection()
-    #TODO: remove from prod?
-    ##if len(SECTIONS) < 10:
-        #do section titles loop so easy gui doesnt break
-        ##choice = ShowSectionTitlesLoop()
-    ##else:
+
     choices = ShowSectionTitlesToBeSelected()
     choice = eg.choicebox(msg, TITLE, choices)
-    #print(choices)
-    #print(CollectionToPyDisplayString(choices))
 
     SectionSelectedGUI(choice)
 
@@ -118,7 +107,6 @@ def nonguirun():
 #########################################################################
 ##COLLECTION##
 #########################################################################
-##### COLLECTION #####
 # A collection is a list of Sections/ or for speaker tuples
 
 def CollectionNew():
@@ -169,7 +157,6 @@ def CollectionToPyDisplayString(Collection):
 #########################################################################
 ##SECTION##
 #########################################################################
-##### Section #####
 ## A section consists of its title and its associated text.
 
 from collections import namedtuple
@@ -392,7 +379,6 @@ def SectionFunctionality(Choice, Section, RegexSpeakerList):
             keys.append(askingforkey)
         text = Search_speakers_for_keywords(Speakers, keys)
     elif Choice == 'Speaker Word Count':
-        #text = Get_speaker_word_count(Speakers)
         text = Get_speaker_word_count_with_regex(Section)
         #elif Choice == 'Add Speaker Manually':
         #askingforspeaker = eg.enterbox(msg='What is the speakers name?(MUST BE IN ALL CAPS)', title='Speaker', default='SMITH', strip=True, image=None, root=None)
@@ -581,14 +567,8 @@ def ReadFile(Filename):
     ''' Read file, returns list! of lines
     :rtype : list
     '''
-    #TODO:possibly do errors replace on this line???
-    #infile = open(Filename, 'r', encoding='utf-16', errors='ignore')
-    #infile = open(Filename, 'r')
-
-    #infile = codecs.open(Filename, 'r', encoding='utf-16', errors='ignore')
     infile = codecs.open(Filename, 'r', encoding='utf-16', errors='replace')
     #TODO: add custom error replace
-
     #infile = codecs.encode(infile,encoding='ASCII',errors='ignore')
     data = infile.readlines()
     infile.close()
@@ -642,10 +622,6 @@ def ShowSectionTitlesLoop():
     #eg.msgbox(msg=secondmessage)
     #thirdmessage = 'hey pagecounter is:' + str(pagecounter)
     #eg.msgbox(msg=thirdmessage)
-
-    #TODO: remove hack from prod
-    #headersclean.__delitem__(34)
-
 
     #codecs.encode(headersclean,encoding='ascii',errors='replace')
     for title in headersclean:
@@ -708,25 +684,19 @@ def DisplaySectionAnalysisOptions():
 def SectionSelectedGUI(SectionChoice):
     #once section selected, get speakers
     global SPEAKERS
+
     section, sectionText = ConvertSectionToListOfLines(SectionChoice)
-    #okay corect section be selected
-    #print(section)
-    #print(sectionText)
     RegexSpeakerList = ListOfSpeakersFromFindAllSpeakersWithRegex(FindAllSpeakersWithRegex(sectionText))
-    #print(RegexSpeakerList)
-    #TODO: add back in for prod
-    #ShowSpeakersToUser(RegexSpeakerList)
+    ShowSpeakersToUser(RegexSpeakerList)
     AnalysisOption = ""
     while AnalysisOption != "Exit":
-        #TODO;Change back in production
         AnalysisOption = DisplaySectionAnalysisOptions()
         DisplayText = SectionFunctionality(AnalysisOption, section, RegexSpeakerList)
-        break
         title = "Beckman Research Application"
         eg.msgbox(DisplayText, title)
     return 0
 
-#RUN PROGRAM
+#####RUN PROGRAM#####
 TESTING = False
 TITLE = "Beckman Research Application"
 SECTIONS = CollectionNew()
