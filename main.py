@@ -91,6 +91,11 @@ def nonguirun():
 
     ShowSectionTitlesToBeSelected()
 
+    choice = 'Section Title:FEDERAL ASSISTANCE TO STATES FOR SCHOOL CONSTRUCTION'
+
+    SectionSelectedGUI(choice)
+
+
     #print(SECTIONS)
 
     #print(CollectionToStrHeaders(SECTIONS))
@@ -273,7 +278,7 @@ def SectionTitlesCleaning():
     titlearray = []
     for tempsection in SECTIONS:
         titlearray.append(tempsection.title)
-    print(titlearray)
+    #print(titlearray)
     cleantitlearray = []
     for temptitle in titlearray:
         #remove commaz
@@ -357,10 +362,14 @@ def ConvertSectionToListOfLines(SectionChoice):
             return section, text
 
 
-def SectionFunctionality(Choice, Section, Speakers, RegexSpeakerList):
+def SectionFunctionality(Choice, Section, RegexSpeakerList):
+    global SECTIONS
+    global SPEAKERS
+    global TESTING
+    #print(Section)
     spi = speaker_indicies_from_section(Section, RegexSpeakerList)
     #Speakers = Add_speaker_to_collection(spi,Section,Speakers)
-    Speakers = Add_speaker_to_collection_with_regex(Section, Speakers)
+    Speakers = Add_speaker_to_collection_with_regex(Section, SPEAKERS)
     #print('Testing speaker collection')
     #print (Speakers)
     #print(RegexSpeakerList)
@@ -372,11 +381,15 @@ def SectionFunctionality(Choice, Section, Speakers, RegexSpeakerList):
         keys = ['black', 'race', 'poor', 'african american']
         text = Search_speakers_for_keywords(Speakers, keys)
     elif Choice == 'Look for manually entered Keyword':
-        print('text box should appear')
-        askingforkey = eg.enterbox(msg='What keyword(s) are you looking for?', title=' ', default='', strip=True,
+        #todo: remove tests from production
+        #print('text box should appear')
+        if TESTING:
+            keys = ['poor','Chicago']
+        else:
+            askingforkey = eg.enterbox(msg='What keyword(s) are you looking for?', title=' ', default='', strip=True,
                                    image=None, root=None)
-        keys = []
-        keys.append(askingforkey)
+            keys = []
+            keys.append(askingforkey)
         text = Search_speakers_for_keywords(Speakers, keys)
     elif Choice == 'Speaker Word Count':
         #text = Get_speaker_word_count(Speakers)
@@ -429,6 +442,7 @@ def Add_speaker_to_collection_with_regex(Section, S):
 def speaker_indicies_from_section(Section, ListOfSpeakers):
     '''Takes in section, and list of speakers, and assigns spoken text to speaker tuple.'''
     sText = Section.text
+    #print(Section)
     sText = sText.split('\n')
     speaker_indicies = []
     for x in ListOfSpeakers:
@@ -482,7 +496,12 @@ def ListOfSpeakersFromFindAllSpeakersWithRegex(RegexSpeakerList):
 
 def Search_speakers_for_keywords(Collection_of_speakers, list_of_keywords):
     '''todo: add to lower logic'''
+    #todo:remove test from priduction
+    global TESTING
+    if TESTING:
+        print(Collection_of_speakers, list_of_keywords)
     returnString = ''
+
     for speaker in Collection_of_speakers:
         for word in list_of_keywords:
             counter = 0
@@ -598,7 +617,7 @@ def ShowSectionTitlesToBeSelected():
         if title != '':
             if not 'No Title' in title:
                 headers_clean.append(title)
-                print(title)
+                #print(title)
     return headers_clean
 
 
@@ -690,15 +709,26 @@ def SectionSelectedGUI(SectionChoice):
     #once section selected, get speakers
     global SPEAKERS
     section, sectionText = ConvertSectionToListOfLines(SectionChoice)
+    #okay corect section be selected
+    #print(section)
+    #print(sectionText)
     RegexSpeakerList = ListOfSpeakersFromFindAllSpeakersWithRegex(FindAllSpeakersWithRegex(sectionText))
+    #print(RegexSpeakerList)
     #TODO: add back in for prod
     #ShowSpeakersToUser(RegexSpeakerList)
     AnalysisOption = ""
     while AnalysisOption != "Exit":
-        AnalysisOption = DisplaySectionAnalysisOptions()
-        DisplayText = SectionFunctionality(AnalysisOption, Section, SPEAKERS, RegexSpeakerList)
+        #TODO;Change back in production
+        #AnalysisOption = DisplaySectionAnalysisOptions()
+        #AnalysisOption = 'Speaker Word Count'
+        AnalysisOption = 'Look for manually entered Keyword'
+        print((AnalysisOption, section, RegexSpeakerList))
+        DisplayText = SectionFunctionality(AnalysisOption, section, RegexSpeakerList)
+        print(DisplayText)
+        break
         title = "Beckman Research Application"
-        eg.msgbox(DisplayText, title)
+        #todo: add mesage box back in to production
+        #eg.msgbox(DisplayText, title)
     return 0
 
 #RUN PROGRAM
@@ -706,7 +736,8 @@ TITLE = "Beckman Research Application"
 SECTIONS = CollectionNew()
 SPEAKERS = CollectionNew()
 DATA = []
+TESTING = True
 
-run()
+#run()
 
-#nonguirun()
+nonguirun()
