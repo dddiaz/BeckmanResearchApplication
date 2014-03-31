@@ -32,7 +32,8 @@ then save as where the format should be plain text
 and under settings it should be utf-16
 
 Notes for Jenny:
-##TODO: hey u may have figured a way to do page numbers, tell jenny
+#TODO: add no title logic, it seems to break the program for some reason
+##TODO: hey u may have figured a way to do page numbers, tell jenny,
 ##TODO: case where title is multi line????
 ##TODO: The doc Translation is way better with adobe
 

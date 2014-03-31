@@ -1,8 +1,8 @@
 ## Daniel Diaz 74393336
 ##
-## Beckman Political Science Project
+## Beckman Research Project
 ##
-## Created Winter 2013 copyright Daniel Diaz All Rights Reserved
+## Created 2013 copyright Daniel Diaz All Rights Reserved
 ## Description: Allows for a user to upload a text file and do analytics on it
 
 __author__ = 'danieldiaz'
@@ -15,27 +15,29 @@ import codecs
 
 
 def run():
-    """Main Function that will run the whole program
+    """Main Function that will run the whole program including the gui
+    :param:none
+    :rtype:none
     """
     global TITLE
     global SECTIONS
     global SPEAKERS
     global DATA
-
-    ##eg.msgbox("Welcome to the Beckman Research Application!", TITLE)
-
+    #Welcome Window
+    eg.msgbox("Welcome to the Beckman Research Application!", TITLE)
+    #Instruction Window
+    instruction_string = MakeInstructionString()
+    eg.msgbox(instruction_string, TITLE)
     #create window for text file
     msg = ('What is the name of the Text file \n'
-           + 'Make sure it is contained within the documents folder and has been converted from PDF to text.')
-    documentName = eg.enterbox(msg='What is the name of the Text file'
-                               , title=' '
-                               , default='TestThis'
+           + 'Make sure it is contained within the same folder as the application')
+    documentname = eg.enterbox(msg='What is the name of the Text file'
+                               , title=TITLE
+                               , default='TextDocument'
                                , strip=True
                                , image=None
                                , root=None)
-
-    datafile = os.path.abspath('../../../' + documentName + '.txt')
-
+    datafile = os.path.abspath('../../../' + documentname + '.txt')
     DATA = ReadFile(datafile)
 
     #Show Section Titles To User
@@ -44,7 +46,7 @@ def run():
 
     choices = ShowSectionTitlesToBeSelected()
     choice = eg.choicebox(msg, TITLE, choices)
-
+    #once the use has chose a section to analyze, run the gui
     SectionSelectedGUI(choice)
 
     if eg.ccbox('EXIT?', TITLE):  # show a Continue/Cancel dialog
@@ -61,45 +63,36 @@ def run():
 
 
 def nonguirun():
-    """Main Function that will run the whole program
+    """Main Function that will run the whole program without the gui for testing purposes
+    :param:none
+    :rtype:none
     """
     global TITLE
     global SECTIONS
     global SPEAKERS
     global DATA
-
+    #testing file path diff than app file path
     datafile = os.path.abspath('test/' + 'TestThis' + '.txt')
-    ##TODO:THIS IS ONLY FOR TESTING!!!!
-
     DATA = ReadFile(datafile)
-
     #Show Section Titles To User
     SECTIONS = AddSectionToCollection(GetSectionTitleIndicies())
-
     SECTIONS = CleanSection()
-
     ShowSectionTitlesToBeSelected()
-
+    #hard coded choice
     choice = 'Section Title:FEDERAL ASSISTANCE TO STATES FOR SCHOOL CONSTRUCTION'
 
     SectionSelectedGUI(choice)
 
-
     #print(SECTIONS)
-
     #print(CollectionToStrHeaders(SECTIONS))
-
     #print(ShowSectionTitlesToBeSelected())
-
     #print('\n\n These are all the section titles \n\n')
     #print(sectiontitlestemp)
-
     #print('\n\n These are all the sections \n\n')
     #tempstrheaders = SectionTitlesCleaning()
     #print(tempstrheaders)
     #for x in tempstrheaders:
     #print(x)
-
     #eg.choicebox('','',tempstrheaders)
     #print(tempstrheaders[33:35])
 
@@ -173,13 +166,16 @@ def SectionStr(Section):
 
 def SectionStrHeaders(Section):
     """Return the section title to string
-    :param Section:
+    :param Section
     """
     return ("Section Title:" + Section.title + "\n")
 
 
 def IsLineUppercase(line):
-    '''finds out if we are dealing with section title'''
+    """finds out if we are dealing with section title
+    :param : line
+    :rtype : bool
+    """
     line.strip('/n')
     line.strip('')
     #special case for page numbers, they need to be ignored
@@ -239,41 +235,39 @@ def CleanSection():
     SECTIONS = tempSECTIONS
     return SECTIONS
 
+
 def CleanTitle(string):
     """
     clean a single title
+    :param string:
     """
     for ch in [',', '.', '-', '\r', '\n', '&', '_', '(', ')', '\t', '\t11173', '\t11235', '\\']:
         string = string.replace(ch, '')
-    #print(string)
     validletters = 'abcdefghijklmnopqrstuvwxyz '
     newstring = ''
     for letter in string.lower():
         if letter in validletters:
             newstring += letter
-    #print (newstring)
     #replace multiple spaces
-    newnewstring = re.sub(" +"," ",newstring)
+    newnewstring = re.sub(" +", " ", newstring)
     return newnewstring.upper()
 
 
 def SectionTitlesCleaning():
     """
+    This function is used to clean the section title
+    it should remove any non a-z chars
     """
     global SECTIONS
     append = False
     titlearray = []
     for tempsection in SECTIONS:
         titlearray.append(tempsection.title)
-    #print(titlearray)
     cleantitlearray = []
     for temptitle in titlearray:
-        #remove commaz
         string = temptitle
-        #print (string)
         for ch in [',', '.', '-', '\r', '\n', '&', '_', '(', ')', '\t', '\t11173', '\t11235', '\\']:
             string = string.replace(ch, '')
-        #print(string)
         validletters = 'abcdefghijklmnopqrstuvwxyz '
         newstring = ''
         for letter in string.lower():
@@ -282,25 +276,27 @@ def SectionTitlesCleaning():
                 #print (newstring)
         #this new string should be lower
         #print(newstring)
-        #if newstring != '' and newstring != '\n' \
-        #and newstring != '\r' and not newstring.isdigit():
         if newstring != '':
+            #must make upper case b/c previous logic did a tolower
             cleantitlearray.append(newstring.upper())
-            #print(temptitleintemp)
     return cleantitlearray
 
 
 def GetSectionText(IndexStart, IndexEnd):
-    '''gets text using section header indexes'''
+    """gets text using section header indexes
+    :param IndexStart:
+    :param IndexEnd:
+    """
     global DATA
     x = DATA[IndexStart:IndexEnd]
     '''FIX: YOU REMOVED A NEWLINE CHAR WIEN U JOINED< SEE IF THE MESSED ANYTHING UP'''
-    result = ('').join(x)
+    result = ''.join(x)
     return result
 
 
 def GetSectionTitle(Index):
-    '''gets text using section header indexes'''
+    """gets text using section header indexes
+    """
     global DATA
     return DATA[Index]
 
@@ -323,8 +319,9 @@ def GetSectionTitleIndicies():
 
 
 def AddSectionToCollection(IndiciesOfHeaders):
-    '''this will add the sections to the collection using the indicies of headers
-    '''
+    """this will add the sections to the collection using the indicies of headers
+    :param IndiciesOfHeaders:
+    """
     global DATA
     global SECTIONS
     i = 0
@@ -340,6 +337,9 @@ def AddSectionToCollection(IndiciesOfHeaders):
 
 
 def ConvertSectionToListOfLines(SectionChoice):
+    """
+    :param SectionChoice:
+    """
     global SECTIONS
     choice = SectionChoice[14:]
     #print('Choice: ' ,choice)
@@ -350,38 +350,39 @@ def ConvertSectionToListOfLines(SectionChoice):
 
 
 def SectionFunctionality(Choice, Section, RegexSpeakerList):
+    """
+    This is called in sectionselectedgui loop
+    after a user has made a choice of analysis, this will run the specific choice
+    after running it wil return the reult string
+    :param Choice:
+    :param Section:
+    :param RegexSpeakerList:
+    """
     global SECTIONS
     global SPEAKERS
     global TESTING
-    #print(Section)
+
+    #this spi variable may be depreciated
     spi = speaker_indicies_from_section(Section, RegexSpeakerList)
     #Speakers = Add_speaker_to_collection(spi,Section,Speakers)
     Speakers = Add_speaker_to_collection_with_regex(Section, SPEAKERS)
-    #print('Testing speaker collection')
-    #print (Speakers)
-    #print(RegexSpeakerList)
-    #print(Section)
-    #print(spi)
-    #print(Speakers)
+
     if Choice == 'Look for speaker Keywords':
         #LookForSpeakerKeywords()
         keys = ['black', 'race', 'poor', 'african american']
         text = Search_speakers_for_keywords(Speakers, keys)
     elif Choice == 'Look for manually entered Keyword':
-        #todo: remove tests from production
-        #print('text box should appear')
         if TESTING:
-            keys = ['poor','Chicago']
+            keys = ['poor', 'Chicago']
         else:
+            #TODO: this could be imporved by asking the user for comma seperated list
             askingforkey = eg.enterbox(msg='What keyword(s) are you looking for?', title=' ', default='', strip=True,
-                                   image=None, root=None)
+                                       image=None, root=None)
             keys = []
             keys.append(askingforkey)
         text = Search_speakers_for_keywords(Speakers, keys)
     elif Choice == 'Speaker Word Count':
         text = Get_speaker_word_count_with_regex(Section)
-        #elif Choice == 'Add Speaker Manually':
-        #askingforspeaker = eg.enterbox(msg='What is the speakers name?(MUST BE IN ALL CAPS)', title='Speaker', default='SMITH', strip=True, image=None, root=None)
         #RegexSpeakerList.append(askingforspeaker)
     elif Choice == 'Show Found Speakers In Document':
         #text = ShowSpeakersToUser(RegexSpeakerList)
@@ -390,18 +391,22 @@ def SectionFunctionality(Choice, Section, RegexSpeakerList):
         sys.exit(0)
     else:
         text = "Exiting Program!"
-        #break
     return text
 
 
 #########################################################################
 ##SPEAKER##
 #########################################################################
-
+#speaker tuple has both the speaker name and the associated speaker text
 Speaker = namedtuple('Speaker', 'name text')
 
 
 def Add_speaker_to_collection_with_regex(Section, S):
+    """
+    :param Section:
+    :param S:
+    """
+    #todo: the parameter S for this function may be depreciated
     sText = Section.text
     OrderedList = re.findall(r'Mr\.\s\b[A-Z]+[A-Z]+\b', sText)
     TextSplit = re.split(r'Mr\.\s\b[A-Z]+[A-Z]+\b', sText)
@@ -426,7 +431,10 @@ def Add_speaker_to_collection_with_regex(Section, S):
 
 
 def speaker_indicies_from_section(Section, ListOfSpeakers):
-    '''Takes in section, and list of speakers, and assigns spoken text to speaker tuple.'''
+    """Takes in section, and list of speakers, and assigns spoken text to speaker tuple.
+    :param Section:
+    :param ListOfSpeakers:
+    """
     sText = Section.text
     #print(Section)
     sText = sText.split('\n')
@@ -447,8 +455,9 @@ def speaker_indicies_from_section(Section, ListOfSpeakers):
     return speaker_indicies
 
 
-##for seraching for speakers
 def FindAllSpeakersWithRegex(Data):
+    """For looking for speakers in the doc
+    """
     #returns a list of names
     #  which will be transformed into a set to get distinct then back into list
     names = []
@@ -481,7 +490,8 @@ def ListOfSpeakersFromFindAllSpeakersWithRegex(RegexSpeakerList):
 
 
 def Search_speakers_for_keywords(Collection_of_speakers, list_of_keywords):
-    '''todo: add to lower logic'''
+    """todo: add to lower logic
+    """
     #todo:remove test from priduction
     global TESTING
     if TESTING:
@@ -578,6 +588,22 @@ def ReadFile(Filename):
 #########################################################################
 ##Display##
 #########################################################################
+
+def MakeInstructionString():
+    """
+    Make Instruction String
+    """
+    result = ("Instructions to use this app:\n" +
+              "\tStep One: Open PDF in Preview\n" +
+              "\tStep One: Save PDF as pdf document. (This is to avoid permissions issues)\n" +
+              "\tStep One: Open new pdf in Adobe Acrobat Pro\n" +
+              "\tStep One: Click Save As then in the menu choose text(plain)\n" +
+              "\tStep One: Foroptions make sure utf-16 is selected.w\n" +
+              "\tStep One: Put resulting text file in same directory as app\n" +
+              "\tStep One: When prompted enter the text file name (excluding the extension)\n" +
+              "\tStep One: Follow App Instructions\n")
+    return result
+
 
 def ShowSectionTitlesToBeSelected():
     '''will be used when displaying info for
