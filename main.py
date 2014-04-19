@@ -77,11 +77,20 @@ def nonguirun():
     #Show Section Titles To User
     SECTIONS = AddSectionToCollection(GetSectionTitleIndicies())
     SECTIONS = CleanSection()
-    ShowSectionTitlesToBeSelected()
-    #hard coded choice
-    choice = 'Section Title:FEDERAL ASSISTANCE TO STATES FOR SCHOOL CONSTRUCTION'
 
-    SectionSelectedGUI(choice)
+
+
+    SECTIONS = fix_empty_section_titles(SECTIONS)
+
+    #print all section title to verify empty sectio n titles
+    #for x in SECTIONS:
+        #print(x.title)
+
+    #ShowSectionTitlesToBeSelected()
+
+    #hard coded choice
+    #choice = 'Section Title:FEDERAL ASSISTANCE TO STATES FOR SCHOOL CONSTRUCTION'
+    #SectionSelectedGUI(choice)
 
     #print(SECTIONS)
     #print(CollectionToStrHeaders(SECTIONS))
@@ -234,6 +243,53 @@ def CleanSection():
         count += 1
     SECTIONS = tempSECTIONS
     return SECTIONS
+
+def fix_empty_section_titles(S):
+    '''takes in the global variable SECTIONS
+    and for each section with no title it appends it to the previoius section
+    with a title
+    '''
+    return_collection = []
+    index = 0
+    return_collection_index = 0
+    for section in S:
+        if not section.title.startswith('No Title Found.'):
+            return_collection.append(section)
+            print('XXXXXXX:',section)
+        else:
+            #section starts with no title found
+            #thus the text needs to be appended to the prev
+            #title with mext
+            current_len_of_collection = len(return_collection)
+            cn = len(return_collection)
+            if cn == 302:
+                print('current_len_of_return_collection:', current_len_of_collection)
+            #because indexing starts at zero
+            c = return_collection[current_len_of_collection - 1]
+            if cn == 302:
+                print('before:', c)
+                print('current section with no title', section)
+            text = c.text + '\n' + section.text
+            x = Section(c.title, text)
+            #print('text to append:',text)
+            if cn == 302:
+                print('After:', x)
+            return_collection.pop(current_len_of_collection - 1)
+            if cn == 302:
+                print(len(return_collection))
+            return_collection.append(x)
+
+            if cn ==302:
+                print('AFTER ACTUAL:', return_collection[len(return_collection)-1])
+        index += 1
+
+        #if TESTING and section.title = 'FEDERAL ASSISTANCE TO STATES FOR SCHOOL CONSTRUCTION ' or
+
+        #if index > 15 and TESTING:
+            #break
+    return return_collection
+
+
 
 
 def CleanTitle(string):
@@ -723,7 +779,7 @@ def SectionSelectedGUI(SectionChoice):
     return 0
 
 #####RUN PROGRAM#####
-TESTING = False
+TESTING = True
 TITLE = "Beckman Research Application"
 SECTIONS = CollectionNew()
 SPEAKERS = CollectionNew()
