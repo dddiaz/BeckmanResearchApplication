@@ -44,6 +44,7 @@ def run():
     SECTIONS = AddSectionToCollection(GetSectionTitleIndicies())
     SECTIONS = CleanSection()
     SECTIONS = fix_empty_section_titles(SECTIONS)
+    SECTIONS = fix_empty_section_texts(SECTIONS)
 
     choices = ShowSectionTitlesToBeSelected()
     choice = eg.choicebox(msg, TITLE, choices)
@@ -906,7 +907,7 @@ def SectionSelectedGUI(SectionChoice):
     return 0
 
 #####RUN PROGRAM#####
-TESTING = True
+TESTING = False
 TITLE = "Beckman Research Application"
 SECTIONS = CollectionNew()
 SPEAKERS = CollectionNew()
