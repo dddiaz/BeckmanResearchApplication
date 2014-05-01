@@ -73,15 +73,61 @@ def nonguirun():
     global SPEAKERS
     global DATA
     #testing file path diff than app file path
-    datafile = os.path.abspath('test/' + 'TestThis' + '.txt')
+    datafile = os.path.abspath('test/' + 'April19Text' + '.txt')
     DATA = ReadFile(datafile)
     #Show Section Titles To User
     SECTIONS = AddSectionToCollection(GetSectionTitleIndicies())
     SECTIONS = CleanSection()
 
+    interesting_shiz = Section(title='ELEMENTARY AND SECOND', text='')
+    index_of_interest = SECTIONS.index(interesting_shiz)
+    print(SECTIONS[index_of_interest - 2])
+    print(SECTIONS[index_of_interest - 1])
+    print(SECTIONS[index_of_interest])
+    print(SECTIONS[index_of_interest + 1])
+    print(SECTIONS[index_of_interest + 2])
+    print(SECTIONS[index_of_interest + 3])
+    print(SECTIONS[index_of_interest + 4])
 
+    print('BREAKKKKKKKKKKKKKKKKKKKKKKKKKKKKK')
 
     SECTIONS = fix_empty_section_titles(SECTIONS)
+    interesting_shiz = Section(title='ELEMENTARY AND SECOND', text='')
+    index_of_interest = SECTIONS.index(interesting_shiz)
+    print(SECTIONS[index_of_interest - 2])
+    print(SECTIONS[index_of_interest - 1])
+    print(SECTIONS[index_of_interest])
+    print(SECTIONS[index_of_interest + 1])
+    print(SECTIONS[index_of_interest + 2])
+    print(SECTIONS[index_of_interest + 3])
+    print(SECTIONS[index_of_interest + 4])
+
+    # index = 0
+    # for x in SECTIONS:
+    #     index += 1
+    #     if 'ARY EDUCATION' in x.title:
+    #         print(SECTIONS[index-2])
+    #         print(SECTIONS[index-1])
+    #         print(x)
+    #         print(SECTIONS[index])
+
+
+    SECTIONS = fix_empty_section_texts(SECTIONS)
+
+    print('BREAKKKKKKKKKKKKKKKKKKKKKKK')
+
+    index = 0
+    for x in SECTIONS:
+        index += 1
+        if 'CONFERENCE REPORT ON HR' in x.title:
+            print(SECTIONS[index-1])
+            print(SECTIONS[index])
+            print(SECTIONS[index+1])
+            print(SECTIONS[index+2])
+            print(SECTIONS[index+3])
+            print(SECTIONS[index+4])
+
+            break
 
     #print all section title to verify empty sectio n titles
     #for x in SECTIONS:
@@ -219,7 +265,8 @@ def CleanSection():
         #print('the temp title is:',tempSectionTitle)
         text = section.text
         #print('the text from the section is:', text)
-        if tempSectionTitle == '' or tempSectionTitle == ' ':
+        #TODO: add a case for the section title O which is a secton seperator
+        if tempSectionTitle == '' or tempSectionTitle == ' ' or tempSectionTitle == 'O ':
             #todo: add no title logic, will make sure that sention has all associated text and not just partial
             tempSectionTitle = 'No Title Found.' + str(count)
             #dont append anpther section
@@ -244,6 +291,7 @@ def CleanSection():
         count += 1
     SECTIONS = tempSECTIONS
     return SECTIONS
+
 
 def fix_empty_section_titles(S):
     '''takes in the global variable SECTIONS
@@ -291,6 +339,84 @@ def fix_empty_section_titles(S):
     return return_collection
 
 
+def fix_empty_section_texts_old(S):
+    '''takes in the global variable SECTIONS
+    and for each section with title and no text
+    it combines the section title with the next one
+    '''
+    #if section has title but empty section title, combine with next title
+    return_collection = []
+
+    #TODO: Double check dis shizzzzz
+
+    for section in S:
+        if not section.text != '':
+            # to avoid dupes if the section titles already appended
+            #then we have already analyzed this section in the else statement
+            #with the look ahead
+
+            prev_section_index = S.index(section) - 1
+            prev_section_in_S = S[prev_section_index]
+
+            temp_title = prev_section_in_S.title + ' ' + section.title
+
+            len_of_return_collection = len(return_collection)
+
+            if temp_title == return_collection[len_of_return_collection-1].title:
+                return_collection.append(section)
+                #print('XXXXXXX:',section)
+            #else skip
+        else:
+            #section has title but no text
+            lengthofS = len(S)
+            index_of_next = S.index(section) + 1
+            index_of_next_next = index_of_next + 1
+            #to make sure no out of bounds error
+            if index_of_next <= lengthofS and index_of_next_next <= lengthofS:
+                nextSection = S[index_of_next]
+                #what about case where there is no next section
+
+                title = section.title + ' ' + nextSection.title
+                #there shouldnt be any text in the current section but just in case
+                text = section.text + '' + nextSection.text
+
+                x = Section(title,text)
+                return_collection.append(x)
+
+    return return_collection
+
+
+def fix_empty_section_texts(S):
+    '''
+    If a section has a title but no text, then it is a part of a different
+    section tittle and needs to be combined.
+    how to approach.
+    reverse list
+    if section text empty then append to next section
+    then undo reverse list and return final SECTIONS
+    '''
+
+    return_collection = []
+    reversedS = S
+    reversedS.reverse()
+
+    for section in reversedS:
+        if section.text != '':
+            return_collection.append(section)
+            #print('XXXXXXX:',section)
+
+        else:
+            #Title but no text
+            last_element_of_return_collection = return_collection[-1]
+            new_title = section.title + ' ' + last_element_of_return_collection.title
+            new_text = last_element_of_return_collection.text
+
+            s_to_add = Section(new_title, new_text)
+            return_collection.pop()
+            return_collection.append(s_to_add)
+
+    return_collection.reverse()
+    return return_collection
 
 
 def CleanTitle(string):
@@ -780,7 +906,7 @@ def SectionSelectedGUI(SectionChoice):
     return 0
 
 #####RUN PROGRAM#####
-TESTING = False
+TESTING = True
 TITLE = "Beckman Research Application"
 SECTIONS = CollectionNew()
 SPEAKERS = CollectionNew()
