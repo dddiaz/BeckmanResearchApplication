@@ -80,28 +80,29 @@ def nonguirun():
     SECTIONS = AddSectionToCollection(GetSectionTitleIndicies())
     SECTIONS = CleanSection()
 
-    interesting_shiz = Section(title='ELEMENTARY AND SECOND', text='')
-    index_of_interest = SECTIONS.index(interesting_shiz)
-    print(SECTIONS[index_of_interest - 2])
-    print(SECTIONS[index_of_interest - 1])
-    print(SECTIONS[index_of_interest])
-    print(SECTIONS[index_of_interest + 1])
-    print(SECTIONS[index_of_interest + 2])
-    print(SECTIONS[index_of_interest + 3])
-    print(SECTIONS[index_of_interest + 4])
+    # interesting_shiz = Section(title='ELEMENTARY AND SECOND', text='')
+    # index_of_interest = SECTIONS.index(interesting_shiz)
+    # print(SECTIONS[index_of_interest - 2])
+    # print(SECTIONS[index_of_interest - 1])
+    # print(SECTIONS[index_of_interest])
+    # print(SECTIONS[index_of_interest + 1])
+    # print(SECTIONS[index_of_interest + 2])
+    # print(SECTIONS[index_of_interest + 3])
+    # print(SECTIONS[index_of_interest + 4])
 
-    print('BREAKKKKKKKKKKKKKKKKKKKKKKKKKKKKK')
+    # print('BREAKKKKKKKKKKKKKKKKKKKKKKKKKKKKK')
 
     SECTIONS = fix_empty_section_titles(SECTIONS)
-    interesting_shiz = Section(title='ELEMENTARY AND SECOND', text='')
-    index_of_interest = SECTIONS.index(interesting_shiz)
-    print(SECTIONS[index_of_interest - 2])
-    print(SECTIONS[index_of_interest - 1])
-    print(SECTIONS[index_of_interest])
-    print(SECTIONS[index_of_interest + 1])
-    print(SECTIONS[index_of_interest + 2])
-    print(SECTIONS[index_of_interest + 3])
-    print(SECTIONS[index_of_interest + 4])
+
+    # interesting_shiz = Section(title='ELEMENTARY AND SECOND', text='')
+    # index_of_interest = SECTIONS.index(interesting_shiz)
+    # print(SECTIONS[index_of_interest - 2])
+    # print(SECTIONS[index_of_interest - 1])
+    # print(SECTIONS[index_of_interest])
+    # print(SECTIONS[index_of_interest + 1])
+    # print(SECTIONS[index_of_interest + 2])
+    # print(SECTIONS[index_of_interest + 3])
+    # print(SECTIONS[index_of_interest + 4])
 
     # index = 0
     # for x in SECTIONS:
@@ -115,20 +116,29 @@ def nonguirun():
 
     SECTIONS = fix_empty_section_texts(SECTIONS)
 
-    print('BREAKKKKKKKKKKKKKKKKKKKKKKK')
+    # print('BREAKKKKKKKKKKKKKKKKKKKKKKK')
+    #
+    # index = 0
+    # for x in SECTIONS:
+    #     index += 1
+    #     if 'CONFERENCE REPORT ON HR' in x.title:
+    #         print(SECTIONS[index-1])
+    #         print(SECTIONS[index])
+    #         print(SECTIONS[index+1])
+    #         print(SECTIONS[index+2])
+    #         print(SECTIONS[index+3])
+    #         print(SECTIONS[index+4])
+    #
+    #         break
 
-    index = 0
+    #print('BREAKKKKKKKKKKKKKKKKKKKKKKK')
+
     for x in SECTIONS:
-        index += 1
         if 'CONFERENCE REPORT ON HR' in x.title:
-            print(SECTIONS[index-1])
-            print(SECTIONS[index])
+            print(x)
+            index = SECTIONS.index(x)
             print(SECTIONS[index+1])
-            print(SECTIONS[index+2])
-            print(SECTIONS[index+3])
-            print(SECTIONS[index+4])
 
-            break
 
     #print all section title to verify empty sectio n titles
     #for x in SECTIONS:
@@ -267,7 +277,10 @@ def CleanSection():
         text = section.text
         #print('the text from the section is:', text)
         #TODO: add a case for the section title O which is a secton seperator
-        if tempSectionTitle == '' or tempSectionTitle == ' ' or tempSectionTitle == 'O ':
+        ##this is a hack but i assumed if a sention title is less than 3 letters
+        ## it is not a real section title
+        if tempSectionTitle == '' or tempSectionTitle == ' ' or tempSectionTitle == 'O '\
+                or len(tempSectionTitle) <= 3:
             #todo: add no title logic, will make sure that sention has all associated text and not just partial
             tempSectionTitle = 'No Title Found.' + str(count)
             #dont append anpther section
@@ -907,7 +920,7 @@ def SectionSelectedGUI(SectionChoice):
     return 0
 
 #####RUN PROGRAM#####
-TESTING = False
+TESTING = True
 TITLE = "Beckman Research Application"
 SECTIONS = CollectionNew()
 SPEAKERS = CollectionNew()
