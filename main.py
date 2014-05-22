@@ -48,6 +48,11 @@ def run():
 
     choices = ShowSectionTitlesToBeSelected()
     choice = eg.choicebox(msg, TITLE, choices)
+
+    #display the selected section text to user
+    ShowSelectedSectionText(choice)
+    #display next section title just in case to user for future ref
+
     #once the use has chose a section to analyze, run the gui
     SectionSelectedGUI(choice)
 
@@ -887,6 +892,32 @@ def ShowSpeakersToUser(RegexSpeakerList):
     msg = 'Found Speakers: ' + '.\n' + str(RegexSpeakerList) + '.\n' + 'Continue to do Analysis'
     eg.msgbox(msg, title)
 
+def ShowSelectedSectionText(SectionChoice):
+    """shows the text associated with the selected section"""
+    section, sectionText = ConvertSectionToListOfLines(SectionChoice)
+    title = "Beckman Research Application"
+    msg = ''
+    # for x in sectionText:
+    #     msg = msg + x + '\n'
+    #eg.textbox('', title, sectionText,codebox=0)
+    text = 'Last 100 letters of section for refrence:\n' + ''.join(section.text[-100:])
+
+    #get next section title
+    global SECTIONS
+    choice = SectionChoice[14:]
+    #print('Choice: ' ,choice)
+    for section in SECTIONS:
+        counter = 0
+        if choice in section.title:
+            index = SECTIONS.index(section) + 1
+            nextSectionTitle = SECTIONS[index].title
+
+
+    text = text + '\nNext section title for ref in case section ending does not seem correct: ' \
+        + nextSectionTitle
+    eg.textbox("", title, text, codebox=0)
+
+
 
 def DisplaySectionAnalysisOptions():
     #choice is the section u want to analyze
@@ -920,7 +951,7 @@ def SectionSelectedGUI(SectionChoice):
     return 0
 
 #####RUN PROGRAM#####
-TESTING = True
+TESTING = False
 TITLE = "Beckman Research Application"
 SECTIONS = CollectionNew()
 SPEAKERS = CollectionNew()
