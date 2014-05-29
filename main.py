@@ -13,6 +13,54 @@ import re
 import sys
 import codecs
 
+def simplerun():
+    """jenny requested a simple program that got rid of the section identification
+    and simply analysed the whole document.
+    this simplerun should do that"""
+    global TITLE
+    global SECTIONS
+    global SPEAKERS
+    global DATA
+    #Welcome Window
+    eg.msgbox("Welcome to the Beckman Research Application!", TITLE)
+    msg = ('What is the name of the Text file \n'
+           + 'Make sure it is contained within the same folder as the application')
+    documentname = eg.enterbox(msg='What is the name of the Text file'
+                               , title=TITLE
+                               , default='TextDocument'
+                               , strip=True
+                               , image=None
+                               , root=None)
+    datafile = os.path.abspath('../../../' + documentname + '.txt')
+    DATA = ReadFile(datafile)
+    SECTIONS = AddSectionToCollection(GetSectionTitleIndicies())
+    SECTIONS = CleanSection()
+    SECTIONS = fix_empty_section_titles(SECTIONS)
+    SECTIONS = fix_empty_section_texts(SECTIONS)
+
+    default_title = SECTIONS[0].title
+    default_text = ''
+
+    #combine all sections into one
+    for x in SECTIONS:
+        temp = x.text + '\n'
+        default_text += x.text
+
+    simple_section = Section(default_title, default_text)
+
+    #show simple gui for choice
+    section, sectionText = ConvertSectionToListOfLines(simple_section.title)
+    RegexSpeakerList = ListOfSpeakersFromFindAllSpeakersWithRegex(FindAllSpeakersWithRegex(sectionText))
+    #ShowSpeakersToUser(RegexSpeakerList)
+    AnalysisOption = ""
+    while AnalysisOption != "Exit":
+        AnalysisOption = DisplaySectionAnalysisOptions()
+        DisplayText = SectionFunctionality(AnalysisOption, section, RegexSpeakerList)
+        title = "Beckman Research Application"
+        eg.msgbox(DisplayText, title)
+    return 0
+
+
 
 def run():
     """Main Function that will run the whole program including the gui
@@ -143,6 +191,13 @@ def nonguirun():
             print(x)
             index = SECTIONS.index(x)
             print(SECTIONS[index+1])
+            print(SECTIONS[index+2])
+            print(SECTIONS[index+3])
+            print(SECTIONS[index+4])
+            print(SECTIONS[index+5])
+            print(SECTIONS[index+6])
+            print(SECTIONS[index+7])
+
 
 
     #print all section title to verify empty sectio n titles
@@ -960,4 +1015,5 @@ DATA = []
 if TESTING:
     nonguirun()
 else:
-    run()
+    #run()
+    simplerun()
